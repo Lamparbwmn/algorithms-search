@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Visualizador de Algoritmos</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Algoritmos de Búsqueda</h1>
+    <div id="grid"></div>
+    <select id="algorithm">
+        <option value="bfs">Búsqueda en Anchura (BFS)</option>
+        <option value="dfs">Búsqueda en Profundidad (DFS)</option>
+    </select>
+    <button id="startBtn">Buscar</button>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

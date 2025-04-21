@@ -1,0 +1,26 @@
+body {
+    font-family: sans-serif;
+    text-align: center;
+}
+
+#grid {
+    display: grid;
+    grid-template-columns: repeat(15, 30px);
+    gap: 2px;
+    margin: 20px auto;
+    width: fit-content;
+}
+
+.cell {
+    width: 30px;
+    height: 30px;
+    background-color: white;
+    border: 1px solid #ccc;
+    cursor: pointer;
+}
+
+.cell.start { background-color: green; }
+.cell.end { background-color: red; }
+.cell.visited { background-color: yellow; }
+.cell.path { background-color: darkorange; }
+.cell.wall { background-color: black; }
