@@ -6,14 +6,52 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <h1>Algoritmos de Búsqueda</h1>
-    <div id="grid"></div>
-    <select id="algorithm">
-        <option value="bfs">Búsqueda en Anchura (BFS)</option>
-        <option value="dfs">Búsqueda en Profundidad (DFS)</option>
-    </select>
-    <button id="startBtn">Buscar</button>
+    <div class="container">
+        <div class="left-column">
+            <div class="grid-container">
+                <div id="grid"></div>
+            </div>
+            <div id="graphContainer" style="display:none; width:550px; height:550px; border:2px solid #e1e4e8; position:relative; background:white;"></div>
+            <div id="controls">
+                <button id="startBtn">Iniciar</button>
+                <button id="nextBtn" disabled>Siguiente paso</button>
+                <button id="prevBtn" disabled>Paso anterior</button>
+                <button id="autoBtn" disabled>Ejecutar automático</button>
+                <button id="resetBtn">Resetear</button>
+            </div>
+        </div>
+        <div class="right-column">
+            <h1>Simulador de algoritmos de búsqueda</h1>
+            <div id="settings">
+                <select id="viewMode">
+                    <option value="grid">Modo Cuadrícula</option>
+                    <option value="graph">Modo Grafo</option>
+                </select>
+                <div class="grid-size-control">
+                    <label>Ancho: <input type="number" id="gridSizeX" min="2" max="15" value="3" /></label>
+                    <label>Alto: <input type="number" id="gridSizeY" min="2" max="15" value="3" /></label>
+                    <button id="updateSize">Actualizar tamaño</button>
+                </div>
+                <select id="algorithm">
+                    <option value="bfs">Breadth-First Search (BFS)</option>contiene
+                    <option value="dfs">Depth-First Search (DFS)</option>
+                    <option value="a*">A* Search</option>
+                    <option value="ucs">Uniform Cost Search (UCS)</option>
+                    <option value="hillclimbing">Hill Climbing</option>
+                    <option value="lhs">Limited Horizon Search (LHS)</option>
+                </select>
+                <label for="uploadAdjMatrix" class="button-secondary" style="margin-top:10px;">Seleccionar archivo CSV</label>
+                <input type="file" id="uploadAdjMatrix" accept=".csv" style="display:none;">
+                <button id="loadAdjMatrixBtn" class="button-secondary" disabled>Cargar matriz</button>
+            </div>
 
+            <div id="info"></div>
+            <button id="downloadAdjMatrixBtn" class="button-secondary" style="display:none;">Descargar matriz CSV</button>
+            <button id="downloadCellMatrixBtn" class="button-secondary" style="display:none;">Descargar matriz de celdas</button>
+
+        </div>
+    </div>
+        <!-- El grid se generará aquí -->
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>

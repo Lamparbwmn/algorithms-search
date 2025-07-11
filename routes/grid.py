@@ -12,7 +12,7 @@ def solve():
     grid = data.get("grid")
     start = tuple(data.get("start"))
     end = tuple(data.get("end"))
-
+    print(algorithm)
     if algorithm == "BFS":
         path = bfs(grid, start, end)
     elif algorithm == "DFS":

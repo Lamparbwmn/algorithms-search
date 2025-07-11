@@ -1,34 +1,77 @@
 from collections import deque
+from .utils import vecinos_posibles
 
 def search(grid, start, end):
-    rows, cols = len(grid), len(grid[0])
-    queue = deque([start])
-    visited = set()
-    came_from = {}
-    visited.add(start)
-
+    queue = deque([(start, [start])])  # (posición, camino)
+    visited = {start}
+    steps = []
+    steps.append({
+        'current': start,
+        'visited': list(visited),
+        'current_path': [start],
+        'queue': [start],
+        'found': False
+    })
     while queue:
-        current = queue.popleft()
+        current, path = queue.popleft()
         if current == end:
-            break
+            steps.append({
+                'current': current,
+                'visited': list(visited),
+                'current_path': path,
+                'queue': [pos for pos, _ in queue],
+                'found': True
+            })
+            return steps
+        for next_pos in vecinos_posibles(grid, current, visited):
+            visited.add(next_pos)
+            new_path = path + [next_pos]
+            queue.append((next_pos, new_path))
+            steps.append({
+                'current': next_pos,
+                'visited': list(visited),
+                'current_path': new_path,
+                'queue': [pos for pos, _ in queue],
+                'found': False
+            })
+    return steps
 
-        for dr, dc in [(-1,0),(1,0),(0,-1),(0,1)]:
-            r, c = current[0] + dr, current[1] + dc
-            neighbor = (r, c)
-
-            if 0 <= r < rows and 0 <= c < cols and grid[r][c] == 0 and neighbor not in visited:
-                queue.append(neighbor)
-                visited.add(neighbor)
-                came_from[neighbor] = current
-
-    # Reconstruir camino
-    path = []
-    if end in came_from:
-        node = end
-        while node != start:
-            path.append(node)
-            node = came_from[node]
-        path.append(start)
-        path.reverse()
-
-    return list(visited), path
+def search_graph(nodes, edges, start, end=None):
+    neighbors = {n['id']: [] for n in nodes}
+    for a, b in edges:
+        neighbors[a].append(b)
+        neighbors[b].append(a)
+    queue = deque([(start, [start])])
+    visited = {start}
+    steps = []
+    steps.append({
+        'current': start,
+        'visited': list(visited),
+        'current_path': [start],
+        'queue': [start],
+        'found': False
+    })
+    while queue:
+        current, path = queue.popleft()
+        if end is not None and current == end:
+            steps.append({
+                'current': current,
+                'visited': list(visited),
+                'current_path': path,
+                'queue': list(q[0] for q in queue),
+                'found': True
+            })
+            return steps
+        for next_pos in neighbors[current]:
+            if next_pos not in visited:
+                visited.add(next_pos)
+                new_path = path + [next_pos]
+                queue.append((next_pos, new_path))
+                steps.append({
+                    'current': next_pos,
+                    'visited': list(visited),
+                    'current_path': new_path,
+                    'queue': [q[0] for q in queue],
+                    'found': False
+                })
+    return steps
