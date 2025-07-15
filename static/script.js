@@ -192,11 +192,11 @@ function createGraphNode(x, y) {
 let selectedGraphNodeForEdge = null;
 function selectGraphNodeForEdge(node) {
     deselectGraphNodeForEdge();
-    node.classList.add('selected');
+    node.classList.add('selected-for-edge');
     selectedGraphNodeForEdge = node;
 }
 function deselectGraphNodeForEdge() {
-    if (selectedGraphNodeForEdge) selectedGraphNodeForEdge.classList.remove('selected');
+    if (selectedGraphNodeForEdge) selectedGraphNodeForEdge.classList.remove('selected-for-edge');
     selectedGraphNodeForEdge = null;
 }
 
@@ -227,14 +227,17 @@ function selectGraphNode(node) {
     if (start === null) {
         start = nodeId;
         node.classList.add('selected-start');
+        deselectGraphNodeForEdge();
     } else if (end === null && nodeId !== start) {
         end = nodeId;
         node.classList.add('selected-end');
+        deselectGraphNodeForEdge();
     } else {
         deselectGraphNodes();
         start = nodeId;
         end = null;
         node.classList.add('selected-start');
+        deselectGraphNodeForEdge();
     }
     updateGraphNodeStyles();
 }

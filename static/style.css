@@ -403,6 +403,11 @@ button:disabled {
     background: #d73a49;
 }
 
+.graph-node.selected-for-edge {
+    background: #ff9800 !important;  /* Naranja para nodos seleccionados para aristas */
+    border: 2px solid #f57c00;
+}
+
 .graph-edge {
     position: absolute;
     background: #586069;
