@@ -5,11 +5,13 @@ def search(grid, inicio, fin):
     heap = [(manhattan_distance(inicio, fin), 0, inicio, [inicio])]
     visitados = set()
     mejorG = {inicio: 0}
+
+    # Paso inicial
     pasos = [{
         'current': inicio,
         'visited': list(visitados),
         'current_path': [inicio],
-        'queue': [inicio],
+        'queue': [inicio],  # El nodo inicio está en la cola al principio
         'queue_info': [{
             'pos': inicio,
             'f': manhattan_distance(inicio, fin),
@@ -21,58 +23,58 @@ def search(grid, inicio, fin):
         'current_h': manhattan_distance(inicio, fin),
         'found': False
     }]
+
     while heap:
         f, g, actual, camino = heapq.heappop(heap)
         visitados.add(actual)
-        h = manhattan_distance(actual, fin)
-        # Construir la cola después de extraer el nodo actual
-        queue_info = [
-            {'pos': item[2], 'f': item[0], 'g': item[1], 'h': manhattan_distance(item[2], fin)
-            }
-            for item in heap
-        ]
+
         if actual == fin:
             pasos.append({
                 'current': actual,
                 'visited': list(visitados),
                 'current_path': camino,
                 'queue': [item[2] for item in heap],
-                'queue_info': queue_info,
+                'queue_info': [
+                    {'pos': item[2], 'f': item[0], 'g': item[1], 'h': item[0] - item[1]}
+                    for item in heap
+                ],
                 'current_f': f,
                 'current_g': g,
-                'current_h': h,
+                'current_h': manhattan_distance(actual, fin),
                 'found': True
             })
             return pasos
+
+        # Procesar vecinos y actualizar heap
+        vecinos_heap = []
         for vecino in vecinos_posibles(grid, actual, visitados):
             nuevoG = g + 1
             if vecino not in mejorG or nuevoG < mejorG[vecino]:
                 mejorG[vecino] = nuevoG
                 nuevoF = nuevoG + manhattan_distance(vecino, fin)
-                heapq.heappush(heap, (nuevoF, nuevoG, vecino, camino + [vecino]))
-                # Registrar el paso tras insertar, pero la cola aún no incluye el nodo actual
-                queue_info_new = [
-                    {
-                        'pos': item[2],
-                        'f': item[0],
-                        'g': item[1],
-                        'h': manhattan_distance(item[2], fin)
-                    }
-                    for item in heap
-                ]
-                pasos.append({
-                    'current': vecino,
-                    'visited': list(visitados),
-                    'current_path': camino + [vecino],
-                    'queue': [item[2] for item in heap],
-                    'queue_info': queue_info_new,
-                    'current_f': nuevoF,
-                    'current_g': nuevoG,
-                    'current_h': manhattan_distance(vecino, fin),
-                    'found': False
-                })
-    return pasos
+                vecinos_heap.append((nuevoF, nuevoG, vecino, camino + [vecino]))
 
+        # Añadir todos los vecinos al heap
+        for v in vecinos_heap:
+            heapq.heappush(heap, v)
+
+        # Registrar el paso después de procesar el nodo actual
+        pasos.append({
+            'current': actual,
+            'visited': list(visitados),
+            'current_path': camino,
+            'queue': [item[2] for item in heap],
+            'queue_info': [
+                {'pos': item[2], 'f': item[0], 'g': item[1], 'h': item[0] - item[1]}
+                for item in heap
+            ],
+            'current_f': f,
+            'current_g': g,
+            'current_h': manhattan_distance(actual, fin),
+            'found': False
+        })
+
+    return pasos
 def search_graph(nodes, edges, inicio, fin=None):
     # Construir vecinos con pesos
     vecinos = {n['id']: [] for n in nodes}

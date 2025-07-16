@@ -558,7 +558,7 @@ document.getElementById("downloadAdjMatrixBtn").addEventListener("click", functi
     .catch(() => alert("No se pudo descargar el archivo CSV"));
 });
 
-// Modificar la función createGrid()
+
 function createGrid() {
     grid = [];
     const container = gridEl.parentElement;
@@ -637,7 +637,7 @@ function createGrid() {
     }
 }
 
-// Modificar la inicialización
+
 document.addEventListener('DOMContentLoaded', () => {
     if (!gridEl) {
         console.error('No se encontró el elemento grid');
